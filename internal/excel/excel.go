@@ -36,8 +36,8 @@ func (c *Coordinates) Write(filePath string) {
 	defer f.Close()
 
 	for _, c := range *c {
-		f.SetCellValue(f.GetSheetName(0), "C"+strconv.Itoa(c.RowIdx), c.Lat)
-		f.SetCellValue(f.GetSheetName(0), "D"+strconv.Itoa(c.RowIdx), c.Long)
+		f.SetCellValue(f.GetSheetName(0), "B"+strconv.Itoa(c.RowIdx), c.Lat)
+		f.SetCellValue(f.GetSheetName(0), "C"+strconv.Itoa(c.RowIdx), c.Long)
 	}
 
 	if err := f.Save(); err != nil {

@@ -30,7 +30,7 @@ func LoadAddresses(filePath string) []Address {
 	for i, row := range rows[1:] { // Skip header row
 		address := Address{
 			RowIdx: i + 2, // starts with 2
-			Value:  row[1],
+			Value:  row[0],
 		}
 		addresses = append(addresses, address)
 	}
