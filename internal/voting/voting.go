@@ -2,7 +2,7 @@ package excel
 
 import (
 	"log"
-	"strings"
+	"strconv"
 
 	"github.com/xuri/excelize/v2"
 )
@@ -12,13 +12,7 @@ type Address struct {
 	Value  string
 }
 
-func removeSpaces(s string) string {
-	return strings.ReplaceAll(s, " ", "")
-}
-
 func LoadAddresses(filePath string) []Address {
-	log.Println("Starting to load addresses from file:", filePath)
-
 	f, err := excelize.OpenFile(filePath)
 	if err != nil {
 		log.Fatal(err)
@@ -35,11 +29,34 @@ func LoadAddresses(filePath string) []Address {
 	for i, row := range rows[1:] { // Skip header row
 		address := Address{
 			RowIdx: i + 2, // starts with 2
-			Value:  removeSpaces(row[0]),
+			Value:  row[1],
 		}
 		addresses = append(addresses, address)
 	}
 
-	log.Println("Finished loading addresses from file:", filePath)
 	return addresses
+}
+
+type Coordinate struct {
+	RowIdx int
+	Lat    float64
+	Long   float64
+}
+
+func WriteCoordinates(filePath string, Coordinates []Coordinate) {
+	f, err := excelize.OpenFile(filePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	for _, c := range Coordinates {
+		f.SetCellValue(f.GetSheetName(0), "C"+strconv.Itoa(c.RowIdx), c.Lat)
+		f.SetCellValue(f.GetSheetName(0), "D"+strconv.Itoa(c.RowIdx), c.Long)
+
+	}
+
+	if err := f.Save(); err != nil {
+		log.Fatal(err)
+	}
 }
